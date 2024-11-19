@@ -16,7 +16,7 @@ type Vertex = [f32; 3];
 type TriIndexes = [u32; 3];
 
 const VERTICES: [Vertex; 4] =
-    [[0.5, 0.5, 0.0], [0.5, -0.5, 0.0], [-0.5, -0.5, 0.0], [-0.5, 0.5, 0.0]];
+    [[1., 1., 0.0], [1., -1., 0.0], [-1., -1., 0.0], [-1., 1., 0.0]];
 
 const INDICES: [TriIndexes; 2] = [[0, 1, 3], [1, 2, 3]];
 
@@ -46,7 +46,7 @@ fn main() {
         load_gl_with(|f_name| win.get_proc_address(f_name.cast()));
     }
 
-    clear_color(0.2, 0.3, 0.3, 1.0);
+    clear_color(0., 0., 0., 1.0);
 
     let vao = VertexArray::new().expect("Couldn't make a VAO");
     vao.bind();
