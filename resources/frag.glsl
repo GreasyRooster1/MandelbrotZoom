@@ -1,8 +1,8 @@
 #version 330 core
-in vec4 vertex_color;
+in vec2 uv;
 
 out vec4 final_color;
 
 void main() {
-    final_color = vertex_color;
+    final_color = uv;
 }
