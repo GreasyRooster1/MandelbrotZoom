@@ -92,9 +92,13 @@ fn main() {
             }
         }
         // now the events are clear.
+
+        let p: *const c_char = null_str!("uni_color").as_ptr().cast();
+        let uni_size_loc = unsafe { glGetUniformLocation(shader_program.0, p) };
         unsafe{
             glClear(GL_COLOR_BUFFER_BIT);
             polygon_mode(Fill);
+            glUniform2f(uni_size_loc, win.get_drawable_size().0 as GLfloat, win.get_drawable_size().1 as GLfloat);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0 as *const _);
         }
         win.swap_window();

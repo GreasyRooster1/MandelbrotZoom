@@ -5,11 +5,24 @@ in vec2 uv;
 out vec4 final_color;
 
 uniform vec2 windowSize;
+uniform vec2 shift;
+uniform float zoom;
+uniform float maxItteration;
 
 void main() {
-    double x0 = double(gl_FragCoord.x)/windowSize.x;
-    double y0 = double(gl_FragCoord.y)/windowSize.y;
+    float x0 = (uv.x*2.47 - 2.)/zoom + shift.x;
+    float y0 = (uv.y*2.24 - 1.12)/zoom + shift.y;
 
+    float ix = 0.;
+    float iy = 0.;
+    float iteration = 0.;
 
-    final_color = vec4(uv,0.0,1.0);
+    while(ix*ix + iy*iy <= 2.*2. && iteration < maxItteration){
+        let xtemp = ix*ix - iy*iy + x0;
+        iy = 2.*ix*iy + y0;
+        ix = xtemp;
+        iteration = iteration + 1.;
+    }
+
+    final_color = vec4(iteration/maxItteration,y0,0.0,1.0);
 }

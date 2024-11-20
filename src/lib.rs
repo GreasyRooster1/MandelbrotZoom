@@ -1,5 +1,14 @@
 use ogl33::*;
 
+#[macro_export]
+macro_rules! null_str {
+  ($lit:literal) => {{
+    // "type check" the input
+    const _: &str = $lit;
+    concat!($lit, "\0")
+  }};
+}
+
 pub fn clear_color(r: f32, g: f32, b: f32, a: f32) {
     unsafe { glClearColor(r, g, b, a) }
 }
