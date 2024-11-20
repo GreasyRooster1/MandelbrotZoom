@@ -9,6 +9,7 @@ use beryllium::{
     *,
 };
 use beryllium::video::GlSwapInterval;
+use imagine::BitmapRGBA8;
 use MandelbrotZoom::*;
 use MandelbrotZoom::PolygonMode::{Fill, Line};
 
@@ -25,6 +26,8 @@ const VERT_SHADER: &str = include_str!("../resources/shaders/vert.glsl");
 const FRAG_SHADER: &str = include_str!("../resources/shaders/frag.glsl");
 
 fn main() {
+    let palette = load_image("./resources/textures/fairy-dust.png");
+
     let sdl = Sdl::init(InitFlags::EVERYTHING);
     sdl.set_gl_context_major_version(3).unwrap();
     sdl.set_gl_context_minor_version(3).unwrap();
@@ -82,6 +85,29 @@ fn main() {
         bytemuck::cast_slice(&INDICES),
         GL_STATIC_DRAW,
     );
+    let mut texture = 0;
+
+
+    unsafe {
+        glGenTextures(1, &mut texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT as GLint);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT as GLint);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR as GLint);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR as GLint);
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RGBA as GLint,
+            palette.width().try_into().unwrap(),
+            palette.height().try_into().unwrap(),
+            0,
+            GL_RGBA,
+            GL_UNSIGNED_BYTE,
+            palette.pixels().as_ptr().cast(),
+        );
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
 
     let uni_size_loc = shader_program.register_uniform("windowSize");
     let uni_shift_loc = shader_program.register_uniform("shift");
@@ -111,4 +137,13 @@ fn main() {
         win.swap_window();
         // here's where we could change the world state and draw.
     }
+}
+
+fn load_image(path:&str)->BitmapRGBA8{
+    let mut f = std::fs::File::open(path).unwrap();
+    let mut bytes = vec![];
+    std::io::Read::read_to_end(&mut f, &mut bytes).unwrap();
+    let mut bitmap = imagine::png::parse_png_rgba8(bytes.as_slice()).unwrap().bitmap;
+    bitmap.flip_scanlines();
+    bitmap
 }
