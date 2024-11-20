@@ -7,7 +7,7 @@ out vec4 final_color;
 uniform vec2 windowSize;
 uniform vec2 shift;
 uniform float zoom;
-uniform float maxItteration;
+uniform float maxIteration;
 
 void main() {
     float x0 = (uv.x*2.47 - 2.)/zoom + shift.x;
@@ -17,12 +17,12 @@ void main() {
     float iy = 0.;
     float iteration = 0.;
 
-    while(ix*ix + iy*iy <= 2.*2. && iteration < maxItteration){
+    while(ix*ix + iy*iy <= 2.*2. && iteration < maxIteration){
         let xtemp = ix*ix - iy*iy + x0;
         iy = 2.*ix*iy + y0;
         ix = xtemp;
         iteration = iteration + 1.;
     }
 
-    final_color = vec4(iteration/maxItteration,y0,0.0,1.0);
+    final_color = vec4(iteration/maxIteration,y0,0.0,1.0);
 }
