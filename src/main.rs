@@ -83,6 +83,11 @@ fn main() {
         GL_STATIC_DRAW,
     );
 
+    let uni_size_loc = shader_program.register_uniform("windowSize");
+    let uni_shift_loc = shader_program.register_uniform("shift");
+    let uni_zoom_loc = shader_program.register_uniform("zoom");
+    let uni_max_iteration_loc = shader_program.register_uniform("maxIteration");
+
     'main_loop: loop {
         // handle events this frame
         while let Some((event, _timestamp)) = sdl.poll_events() {
@@ -93,12 +98,14 @@ fn main() {
         }
         // now the events are clear.
 
-        let p: *const c_char = null_str!("uni_color").as_ptr().cast();
-        let uni_size_loc = unsafe { glGetUniformLocation(shader_program.0, p) };
+
         unsafe{
             glClear(GL_COLOR_BUFFER_BIT);
             polygon_mode(Fill);
             glUniform2f(uni_size_loc, win.get_drawable_size().0 as GLfloat, win.get_drawable_size().1 as GLfloat);
+            glUniform2f(uni_shift_loc, 0.0,0.0);
+            glUniform1f(uni_zoom_loc, 1.);
+            glUniform1f(uni_max_iteration_loc, 1000.);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0 as *const _);
         }
         win.swap_window();
