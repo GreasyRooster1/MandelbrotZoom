@@ -8,6 +8,9 @@ uniform vec2 windowSize;
 uniform vec2 shift;
 uniform float zoom;
 uniform float maxIteration;
+uniform float palRepeat;
+
+uniform sampler2D palette_texture;
 
 void main() {
     float x0 = (uv.x*2.47 - 2.)/zoom + shift.x;
@@ -24,5 +27,8 @@ void main() {
         iteration = iteration + 1.;
     }
 
-    final_color = vec4(iteration/maxIteration,0.0,0.0,1.0);
+    float ratio = 1.0-iteration/maxIteration;
+    float repeated_ratio = mod(ratio*palRepeat,1);
+
+    final_color = texture(palette_texture,vec2(repeated_ratio,0.5));
 }
