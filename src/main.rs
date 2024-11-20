@@ -168,8 +168,8 @@ fn main() {
             glClear(GL_COLOR_BUFFER_BIT);
             polygon_mode(Fill);
             glUniform2f(uni_size_loc, win.get_drawable_size().0 as GLfloat, win.get_drawable_size().1 as GLfloat);
-            glUniform2f(uni_shift_loc, shift_x,shift_y);
-            glUniform1f(uni_zoom_loc, zoom);
+            glUniform2f(uni_shift_loc, shift_x*100000.,shift_y*100000.);
+            glUniform1f(uni_zoom_loc, zoom*100000.);
             glUniform1f(uni_max_iteration_loc, 1000.);
             glUniform1f(uni_repeat_loc, 10.);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0 as *const _);
