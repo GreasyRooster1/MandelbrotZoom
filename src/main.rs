@@ -105,7 +105,7 @@ fn main() {
             glUniform2f(uni_size_loc, win.get_drawable_size().0 as GLfloat, win.get_drawable_size().1 as GLfloat);
             glUniform2f(uni_shift_loc, 0.0,0.0);
             glUniform1f(uni_zoom_loc, 1.);
-            glUniform1f(uni_max_iteration_loc, 1000.);
+            glUniform1f(uni_max_iteration_loc, 100.);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0 as *const _);
         }
         win.swap_window();

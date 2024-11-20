@@ -18,11 +18,11 @@ void main() {
     float iteration = 0.;
 
     while(ix*ix + iy*iy <= 2.*2. && iteration < maxIteration){
-        let xtemp = ix*ix - iy*iy + x0;
+        float xtemp = ix*ix - iy*iy + x0;
         iy = 2.*ix*iy + y0;
         ix = xtemp;
         iteration = iteration + 1.;
     }
 
-    final_color = vec4(iteration/maxIteration,y0,0.0,1.0);
+    final_color = vec4(iteration/maxIteration,0.0,0.0,1.0);
 }
