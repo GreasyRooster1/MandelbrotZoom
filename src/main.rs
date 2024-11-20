@@ -1,4 +1,6 @@
 #![allow(clippy::single_match)]
+
+use std::collections::HashSet;
 use ogl33::*;
 const WINDOW_TITLE: &str = "Hello Window";
 
@@ -8,6 +10,7 @@ use beryllium::{
     video::{CreateWinArgs, GlContextFlags, GlProfile},
     *,
 };
+use beryllium::events::{*};
 use beryllium::video::GlSwapInterval;
 use imagine::BitmapRGBA8;
 use MandelbrotZoom::*;
@@ -109,17 +112,31 @@ fn main() {
         glGenerateMipmap(GL_TEXTURE_2D);
     }
 
+    let mut keys_held = HashSet::new();
+
     let uni_size_loc = shader_program.register_uniform("windowSize");
     let uni_shift_loc = shader_program.register_uniform("shift");
     let uni_zoom_loc = shader_program.register_uniform("zoom");
     let uni_max_iteration_loc = shader_program.register_uniform("maxIteration");
     let uni_repeat_loc = shader_program.register_uniform("palRepeat");
 
+    let mut shift_x = 0.;
+    let mut shift_y = 0.;
+
+    let mut zoom = 1.;
+
     'main_loop: loop {
         // handle events this frame
         while let Some((event, _timestamp)) = sdl.poll_events() {
             match event {
                 Event::Quit => break 'main_loop,
+                Event::Key { pressed, keycode, .. } => {
+                    if pressed {
+                        keys_held.insert(keycode);
+                    } else {
+                        keys_held.remove(&keycode);
+                    }
+                }
                 _ => (),
             }
         }
@@ -127,11 +144,32 @@ fn main() {
 
 
         unsafe{
+            if keys_held.contains(&SDLK_a) {
+                shift_x-=0.01/zoom;
+            }
+            if keys_held.contains(&SDLK_d) {
+                shift_x+=0.01/zoom;
+            }
+
+            if keys_held.contains(&SDLK_w) {
+                shift_y-=0.01/zoom;
+            }
+            if keys_held.contains(&SDLK_s) {
+                shift_y+=0.01/zoom;
+            }
+
+            if keys_held.contains(&SDLK_EQUALS) {
+                zoom*=1.025;
+            }
+            if keys_held.contains(&SDLK_MINUS) {
+                zoom*=0.975;
+            }
+
             glClear(GL_COLOR_BUFFER_BIT);
             polygon_mode(Fill);
             glUniform2f(uni_size_loc, win.get_drawable_size().0 as GLfloat, win.get_drawable_size().1 as GLfloat);
-            glUniform2f(uni_shift_loc, 0.0,0.0);
-            glUniform1f(uni_zoom_loc, 1.);
+            glUniform2f(uni_shift_loc, shift_x,shift_y);
+            glUniform1f(uni_zoom_loc, zoom);
             glUniform1f(uni_max_iteration_loc, 1000.);
             glUniform1f(uni_repeat_loc, 10.);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0 as *const _);
