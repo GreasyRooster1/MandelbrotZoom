@@ -20,9 +20,9 @@ const VERTICES: [Vertex; 4] =
 
 const INDICES: [TriIndexes; 2] = [[0, 1, 3], [1, 2, 3]];
 
-const VERT_SHADER: &str = include_str!("../resources/vert.glsl");
+const VERT_SHADER: &str = include_str!("../resources/shaders/vert.glsl");
 
-const FRAG_SHADER: &str = include_str!("../resources/frag.glsl");
+const FRAG_SHADER: &str = include_str!("../resources/shaders/frag.glsl");
 
 fn main() {
     let sdl = Sdl::init(InitFlags::EVERYTHING);
