@@ -276,6 +276,11 @@ impl ShaderProgram {
             Err(out)
         }
     }
+
+    pub fn register_uniform(&self, name: &str) -> GLint{
+        let p: *const c_char = format!("{name}\0").as_ptr().cast();
+        unsafe { glGetUniformLocation(self.0, p) }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
