@@ -113,6 +113,7 @@ fn main() {
     let uni_shift_loc = shader_program.register_uniform("shift");
     let uni_zoom_loc = shader_program.register_uniform("zoom");
     let uni_max_iteration_loc = shader_program.register_uniform("maxIteration");
+    let uni_repeat_loc = shader_program.register_uniform("palRepeat");
 
     'main_loop: loop {
         // handle events this frame
@@ -131,7 +132,8 @@ fn main() {
             glUniform2f(uni_size_loc, win.get_drawable_size().0 as GLfloat, win.get_drawable_size().1 as GLfloat);
             glUniform2f(uni_shift_loc, 0.0,0.0);
             glUniform1f(uni_zoom_loc, 1.);
-            glUniform1f(uni_max_iteration_loc, 100.);
+            glUniform1f(uni_max_iteration_loc, 1000.);
+            glUniform1f(uni_repeat_loc, 10.);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0 as *const _);
         }
         win.swap_window();
